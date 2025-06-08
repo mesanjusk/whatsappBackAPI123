@@ -50,6 +50,13 @@ client.on('message', async msg => {
         return;
     }
 
+    // Auto reply logic
+    if (msg.body.toLowerCase() === 'hi') {
+        await msg.reply('hello');
+        console.log('🤖 Replied with "hello"');
+    }
+
+    // Optional: forward to your backend API
     try {
         await axios.post('https://your-api.com/api/new-order', {
             from: msg.from.replace(/\D/g, ''),
@@ -60,5 +67,6 @@ client.on('message', async msg => {
         console.error('❌ Failed to send to API:', err.message);
     }
 });
+
 
 client.initialize();
