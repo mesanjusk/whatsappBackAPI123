@@ -11,10 +11,19 @@ const client = new Client({
     }
 });
 
+let latestQr = null;
+
 client.on('qr', qr => {
-    qrcode.generate(qr, { small: true });
-    console.log('📲 Scan the QR code above with your WhatsApp mobile app');
+    latestQr = qr;
+    console.log('📲 QR code updated');
 });
+
+app.get('/qr', async (req, res) => {
+    if (!latestQr) return res.status(404).send('No QR yet');
+    const qrImage = await qrcode.toDataURL(latestQr);
+    res.send(`<img src="${qrImage}" />`);
+});
+
 
 client.on('ready', () => {
     console.log('✅ Client is ready and connected to WhatsApp');
